@@ -1,26 +1,21 @@
-import {faker} from '@faker-js/faker'
-describe('Projeto', () => {
-    beforeEach(() => {
-      const env = {
-        user_name: "gil",
-        user_password: "102938gau",
-      };
-      cy.Login(env);
-    });
+import { faker } from '@faker-js/faker';
 
-    const project = {
-        name: faker.datatype.uuid(),
-        description: faker.lorem.paragraph()
-      }
+const options = { env: { snapshotOnly: true } };
 
-    it('Projeto criado com sucesso', () => {
-
-        const env = {
-            user_name: "gil",
-            user_password: "102938gau",
-          };
-    
-      cy.Projeto(project)
-      cy.url().should('be.equal', `${Cypress.config('baseUrl')}${env.user_name}/${project.name}`);
-    });
+describe('Projeto', options, () => {
+  beforeEach(() => {
+    cy.Logsession();
   });
+
+  it('Projeto criado com sucesso', () => {
+    const project = {
+      name: faker.datatype.uuid(),
+      description: faker.lorem.paragraph(),
+    };
+
+    cy.wait(1000); 
+    cy.Projeto(project);
+
+    cy.url().should('be.equal', `${Cypress.config('baseUrl')}/${Cypress.env('user_name')}/${project.name}`);
+  });
+});
